@@ -14,10 +14,8 @@ export default function Navbar() {
   const location                = useLocation()
   const menuRef                 = useRef(null)
 
-  // Close drawer on route change
   useEffect(() => { setMenuOpen(false) }, [location.pathname])
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false)
@@ -26,7 +24,6 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handler)
   }, [menuOpen])
 
-  // Lock body scroll while drawer is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }

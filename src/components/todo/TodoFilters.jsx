@@ -18,9 +18,6 @@ export default function TodoFilters({
 
   return (
     <div className={styles.filters}>
-      <div className={styles.filterIcon}>
-        <Filter size={16} />
-      </div>
 
       <div className={styles.filterGroup}>
         <label htmlFor="user-filter">User</label>

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { FORM_STORAGE_KEY } from '../constants'
 
-// Re-export so existing imports of INPUT_TYPES from this file still work
 export { INPUT_TYPES } from '../constants'
 
 const STORAGE_KEY = FORM_STORAGE_KEY
@@ -13,7 +12,7 @@ function createField(overrides = {}) {
     type: 'text',
     placeholder: '',
     required: false,
-    options: [], // for select, checkbox, radio
+    options: [], 
     ...overrides,
   }
 }

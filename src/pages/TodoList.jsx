@@ -15,17 +15,14 @@ export default function TodoList() {
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
 
-  // ── Restore last filters from React Query cache when URL has no params ────
   useEffect(() => {
     if (searchParams.has('page')) return
     const cached = queryClient.getQueryData(todoKeys.lastFilters())
     if (cached) setSearchParams(buildParams(cached), { replace: true })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])
 
-  // ── Parse typed values from URL ───────────────────────────────────────────
   const { userFilter, statusFilter, page, limit } = parseParams(searchParams)
 
-  // ── Write every change back to the React Query cache (in-memory persistence)
   useEffect(() => {
     queryClient.setQueryData(todoKeys.lastFilters(), { userFilter, statusFilter, page, limit })
   }, [userFilter, statusFilter, page, limit, queryClient])
@@ -45,7 +42,6 @@ export default function TodoList() {
   const total      = data?.total ?? 0
   const totalPages = Math.max(1, Math.ceil(total / limit))
 
-  // ── URL update helper (replace: true keeps history clean) ────────────────
   const setParams = (updates) =>
     setSearchParams(buildParams({ userFilter, statusFilter, page, limit, ...updates }), { replace: true })
 
