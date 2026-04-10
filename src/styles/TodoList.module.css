@@ -1,0 +1,519 @@
+.page {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.header {
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.header p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.refreshLabel {
+  color: var(--primary);
+  font-style: italic;
+}
+
+/* ── Filters ────────────────────────────────────────────────── */
+.filters {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 160px;
+}
+
+.filterGroup label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-secondary);
+}
+
+.filterGroup select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  /* Ensure full width on mobile */
+  width: 100%;
+}
+
+.filterGroup select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.filterGroup select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.clearBtn {
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+  white-space: nowrap;
+  align-self: flex-end;
+  /* Touch-friendly height */
+  min-height: 42px;
+}
+
+.clearBtn:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: var(--danger-light);
+}
+
+/* ── Filter icon ────────────────────────────────────────────── */
+.filterIcon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ── Stats bar ──────────────────────────────────────────────── */
+.statsBar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.stat strong {
+  color: var(--text-primary);
+}
+
+.statActive {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+/* ── Table wrapper with horizontal scroll ───────────────────── */
+.tableWrapper {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: opacity 0.15s ease;
+}
+
+/* Horizontal scroll container for the table only */
+.tableScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Dim while fetching next page (placeholderData visible) */
+.dimmed {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.table {
+  width: 100%;
+  min-width: 560px;    /* prevents columns squishing below readable width */
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table thead tr {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+
+.table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.table tbody tr:hover {
+  background: var(--primary-light);
+}
+
+.table td {
+  padding: 13px 16px;
+  vertical-align: middle;
+}
+
+/* ── Skeleton loading rows ──────────────────────────────────── */
+.skeletonRow td {
+  padding: 15px 16px;
+}
+
+.skeleton {
+  display: inline-block;
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeletonSm { width: 40px; }
+.skeletonMd { width: 100px; }
+.skeletonLg { width: 240px; }
+
+/* ── Cell helpers ───────────────────────────────────────────── */
+.todoId {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: monospace;
+  font-weight: 600;
+}
+
+.todoTitle {
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.todoTitle.done {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.statusBadge.completed {
+  background: var(--success-light);
+  color: #065f46;
+}
+
+.statusBadge.pending {
+  background: var(--warning-light);
+  color: #92400e;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.userName {
+  font-weight: 500;
+}
+
+.userInitial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 700;
+  margin-right: 8px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* ── Empty / Error ──────────────────────────────────────────── */
+.emptyCell {
+  padding: 0 !important;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-size: 32px;
+}
+
+.empty p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background: var(--danger-light);
+  border: 1px solid #fca5a5;
+  border-radius: var(--radius);
+  color: #b91c1c;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+
+.errorBanner button {
+  margin-left: auto;
+  padding: 6px 14px;
+  background: var(--danger);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Pagination ─────────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pageInfo {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pageControls {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+.pageBtn {
+  min-width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: all 0.12s;
+  /* Touch-friendly */
+  touch-action: manipulation;
+}
+
+.pageBtn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.pageBtn.activePage {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  font-weight: 700;
+}
+
+.pageBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ellipsis {
+  padding: 0 4px;
+  color: var(--text-muted);
+  font-size: 14px;
+  user-select: none;
+}
+
+.fetchingDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-left: 4px;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.pageSizeSelect {
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: var(--surface);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .header h1 {
+    font-size: 24px;
+  }
+}
+
+/* Tablet portrait */
+@media (max-width: 768px) {
+  .filters {
+    padding: 14px 16px;
+    gap: 10px;
+  }
+
+  .filterGroup {
+    min-width: calc(50% - 6px);
+  }
+
+  .pagination {
+    gap: 12px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .header h1 {
+    font-size: 22px;
+  }
+
+  .filterGroup {
+    min-width: 100%;   /* each filter takes full row on small screens */
+  }
+
+  .clearBtn {
+    width: 100%;
+  }
+
+  .statsBar {
+    gap: 6px;
+  }
+
+  .stat {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+
+  /* Pagination: stack info above controls */
+  .pagination {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Hide numbered page buttons on very small screens, keep prev/next/first/last */
+  .pageBtn:not(.activePage):not([aria-label]) {
+    display: none;
+  }
+
+  .pageBtn.activePage {
+    display: inline-flex;
+  }
+
+  .ellipsis {
+    display: none;
+  }
+
+  /* Show first/last/prev/next (they have aria-label) */
+  .pageBtn[aria-label] {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 400px) {
+  .table {
+    font-size: 13px;
+  }
+
+  .table th,
+  .table td {
+    padding: 10px 12px;
+  }
+}
