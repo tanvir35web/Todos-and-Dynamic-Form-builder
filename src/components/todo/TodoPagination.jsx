@@ -50,6 +50,7 @@ export default function TodoPagination({
         {' '}·{' '}
         <CustomSelect
           compact
+          dropUp
           value={String(limit)}
           onChange={val => onLimitChange(Number(val))}
           options={pageSizeOptions}

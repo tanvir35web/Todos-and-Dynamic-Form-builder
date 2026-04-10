@@ -69,8 +69,7 @@ export default function FormPreview() {
 
     const output = {}
     fields.forEach(field => { output[field.label || field.id] = values[field.id] })
-    console.log('📋 Form submitted:', output)
-    console.log('📦 Raw values:', values)
+    console.log('Form submitted:', output)
     setSubmittedData(output)
     setSubmitted(true)
   }

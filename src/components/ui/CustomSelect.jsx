@@ -22,6 +22,7 @@ export default function CustomSelect({
   placeholder = 'Select…',
   disabled = false,
   compact = false,
+  dropUp = false,
   className = '',
 }) {
   const [open, setOpen]           = useState(false)
@@ -93,7 +94,7 @@ export default function CustomSelect({
 
   return (
     <div
-      className={`${styles.wrapper} ${className}`}
+      className={`${styles.wrapper} ${compact ? styles.wrapperCompact : ''} ${className}`}
       ref={wrapperRef}
     >
       {/* ── Trigger ────────────────────────────────────────────── */}
@@ -123,7 +124,7 @@ export default function CustomSelect({
       {/* ── Menu ───────────────────────────────────────────────── */}
       {open && (
         <ul
-          className={styles.menu}
+          className={`${styles.menu} ${dropUp ? styles.menuUp : ''}`}
           ref={menuRef}
           role="listbox"
           aria-label="Options"

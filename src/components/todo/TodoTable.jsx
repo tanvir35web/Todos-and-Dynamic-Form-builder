@@ -3,14 +3,6 @@ import StatusBadge from '../ui/StatusBadge'
 import SkeletonRow from '../ui/SkeletonRow'
 import styles from '../../styles/TodoList.module.css'
 
-function UserCell({ name }) {
-  return (
-    <>
-      <span className={styles.userInitial}>{name?.[0] ?? '?'}</span>
-      <span className={styles.userName}>{name}</span>
-    </>
-  )
-}
 
 /**
  * Scrollable data table for todos.
@@ -52,8 +44,8 @@ export default function TodoTable({ todos, userMap, limit, isLoading, isPlacehol
                       </span>
                     </td>
                     <td><StatusBadge completed={todo.completed} /></td>
-                    <td>
-                      <UserCell name={userMap[todo.userId] ?? `User ${todo.userId}`} />
+                    <td className={styles.userName}>
+                      {userMap[todo.userId] ?? `User ${todo.userId}`}
                     </td>
                   </tr>
                 ))

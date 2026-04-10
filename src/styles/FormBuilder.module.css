@@ -198,7 +198,8 @@
   padding-right: 36px;
 }
 
-.formGroup input:focus,
+/* Exclude checkboxes — they get their own focus style below */
+.formGroup input:not([type="checkbox"]):focus,
 .formGroup select:focus,
 .formGroup textarea:focus {
   outline: none;
@@ -213,7 +214,7 @@
 
 /* Required toggle */
 .requiredToggle {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 10px 0;
@@ -224,14 +225,24 @@
 .requiredToggle input[type="checkbox"] {
   width: 17px;
   height: 17px;
+  margin: 0;              /* reset browser default margin that causes misalignment */
   accent-color: var(--primary);
   cursor: pointer;
   flex-shrink: 0;
+  vertical-align: middle;
 }
 
 .requiredToggle span {
   font-size: 14px;
   color: var(--text-primary);
+  line-height: 1;
+}
+
+/* Focus ring on the checkbox — visible only via keyboard */
+.requiredToggle input[type="checkbox"]:focus-visible {
+  outline: 2.5px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 3px;
 }
 
 /* ── Options section (select/checkbox/radio) ────────────────── */
