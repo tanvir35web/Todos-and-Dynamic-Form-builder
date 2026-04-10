@@ -6,7 +6,9 @@ A production-quality React application with two independent features: a **Todo L
 
 ## Live Demo
 
-Run locally with `npm run dev` → [http://localhost:5173](http://localhost:5173)
+🔗 **[https://todos-and-dynamic-form-builder-cprw.vercel.app](https://todos-and-dynamic-form-builder-cprw.vercel.app)**
+
+Or run locally with `npm run dev` → [http://localhost:5173](http://localhost:5173)
 
 ---
 
@@ -16,7 +18,7 @@ Run locally with `npm run dev` → [http://localhost:5173](http://localhost:5173
 |---|---|---|
 | Framework | React 19 (functional + hooks) | Required |
 | Routing | React Router v7 | Client-side SPA routing; `useSearchParams` as primary filter state |
-| Data fetching & caching | **TanStack Query v5** | Declarative fetching, automatic caching, background prefetch, devtools |
+| Data fetching & caching | **TanStack Query v5** | Declarative fetching, automatic caching, stale-while-revalidate, devtools |
 | Icons | **Lucide React** | Consistent, accessible SVG icon set — no emoji icons |
 | Styling | CSS Modules | Scoped per-component, no class collisions |
 | Build tool | Vite | Fast dev server, optimised production build |
@@ -27,14 +29,13 @@ Run locally with `npm run dev` → [http://localhost:5173](http://localhost:5173
 
 ### Todo List (`/todos`)
 
-- **Server-side pagination** via JSONPlaceholder's `?_page` and `?_limit` query params — only the current page is fetched, not all 200 todos at once
+- **Server-side pagination** via JSONPlaceholder's `?_page` and `?_limit` query params — only the current page is fetched on demand
 - **Server-side filtering** — `?userId=X` and `?completed=true|false` are sent to the API, reducing payload on every filter change
 - **Total count** from the `X-Total-Count` response header drives the pagination UI
-- **Instant navigation** — the next page is prefetched in the background as soon as the current page loads, so "Next" clicks feel instantaneous
 - **Stale-while-revalidate** — `placeholderData` keeps the previous page visible during refetch, eliminating loading flashes
 - **Two-layer filter persistence**:
   - **URL query params** are the primary source of truth — filters are bookmarkable, shareable, and survive browser back/forward
-  - **React Query in-memory cache** bridges state across in-app navigation (e.g. clicking a nav link and returning restores the last filters without a network round trip; clears on hard refresh)
+  - **React Query in-memory cache** bridges state across in-app navigation (returning to the page restores the last filters; clears on hard refresh)
 - **Configurable page sizes** — 5 / 10 / 20 / 50 items per page
 - **Smart ellipsis pagination** — first, last, prev, next, and surrounding pages with `…` where appropriate
 - **Skeleton loading rows** on first fetch; pulsing dot indicator on background refetch
@@ -72,9 +73,9 @@ src/
 │
 ├── hooks/
 │   ├── useTodosQuery.js                 # TanStack Query hooks for the Todo List
-│   │                                    #   - todoKeys    → structured query key factory
-│   │                                    #   - fetchTodos  → API call with pagination + filters
-│   │                                    #   - useTodosQuery() → placeholderData + next-page prefetch
+│   │                                    #   - todoKeys      → structured query key factory
+│   │                                    #   - fetchTodos    → API call with pagination + filters
+│   │                                    #   - useTodosQuery() → placeholderData for smooth UX
 │   │                                    #   - useUsersQuery() → 10-min staleTime
 │   └── useFormBuilder.js                # Form schema CRUD + localStorage persistence
 │
@@ -82,12 +83,14 @@ src/
 │   ├── Navbar.jsx                       # Responsive nav with animated mobile hamburger drawer
 │   │
 │   ├── ui/                              # Shared, reusable UI primitives
+│   │   ├── CustomSelect.jsx             # Fully custom dropdown — keyboard nav, animations,
+│   │   ├── CustomSelect.module.css      #   dropUp support; replaces native <select> everywhere
 │   │   ├── StatusBadge.jsx              # Completed / Pending badge with Lucide icons
 │   │   ├── StatusBadge.module.css
 │   │   └── SkeletonRow.jsx              # Shimmer skeleton row for table loading state
 │   │
 │   ├── todo/                            # Todo List sub-components
-│   │   ├── TodoFilters.jsx              # User + status filter selects + clear button
+│   │   ├── TodoFilters.jsx              # User + status filter dropdowns + clear button
 │   │   ├── TodoStats.jsx                # Summary chips (page range, total, filters active)
 │   │   ├── TodoTable.jsx                # Data table with loading / empty / error states
 │   │   └── TodoPagination.jsx           # Smart pagination bar + page-size selector
@@ -151,6 +154,18 @@ npm run preview    # serve the production bundle locally
 
 Every file is kept under 200 lines by extracting focused sub-components. Page components act as orchestrators: they own state and pass props down; presentational sub-components handle a single concern (rendering a table, a pagination bar, a field card, etc.). This keeps files readable, testable in isolation, and easy to change without touching unrelated code.
 
+### Custom dropdown — `CustomSelect`
+
+Native `<select>` elements cannot be styled for their open/dropdown state — the OS renders the option list directly. To achieve a consistent modern look, the app uses a fully custom `CustomSelect` component (`components/ui/`) that replaces every `<select>` in the app:
+
+- **Trigger** looks identical to every other text input in the app (same border, shadow, focus ring)
+- **Chevron** is a Lucide `ChevronDown` that rotates 180° and turns indigo when open
+- **Menu panel** — white card, rounded corners, layered shadow, slide-in animation
+- **Options** — hover and keyboard focus highlight with `primary-light`; selected option shown bold with a `Check` icon
+- **Keyboard navigation** — `↑ ↓` to move, `Enter` to select, `Escape`/`Tab` to close
+- **`dropUp` prop** — menu opens upward (used for the page-size selector in the pagination bar so it doesn't clip off-screen)
+- **`compact` prop** — smaller padding variant that renders inline with surrounding text
+
 ### URL query params as filter state (primary source of truth)
 
 Filter values (user, status, page, limit) are stored in the URL via React Router's `useSearchParams`. This means:
@@ -176,15 +191,17 @@ retry: 2               // retry failed requests twice before showing an error
 refetchOnWindowFocus: false  // prevents surprise refetches in demos / presentations
 ```
 
-### Server-side pagination
+`placeholderData: (prev) => prev` is set per-query so the previous page's data stays visible while a new page loads, eliminating blank-screen flashes during pagination.
+
+### Server-side pagination — fetch on demand
 
 JSONPlaceholder supports `?_page=N&_limit=N` and returns an `X-Total-Count` header. The app uses this to:
 
-1. Fetch only the current page — not all 200 records
+1. Fetch only the current page — not all 200 records upfront
 2. Calculate `totalPages = Math.ceil(totalCount / limit)` for the pagination UI
 3. Combine with filters: `?_page=2&_limit=10&userId=3&completed=false`
 
-Next-page prefetch (`queryClient.prefetchQuery`) is triggered in a `useEffect` every time the current page resolves, so the next page is usually already cached when the user clicks "Next".
+Each page is fetched only when the user navigates to it. TanStack Query caches every page fetched during the session, so revisiting a page within the 1-minute `staleTime` window serves instantly from cache with no network request.
 
 ### Constants & utils — single source of truth
 
