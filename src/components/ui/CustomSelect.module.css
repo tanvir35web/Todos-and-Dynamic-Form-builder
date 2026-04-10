@@ -1,0 +1,162 @@
+/* ── Wrapper ─────────────────────────────────────────────────────
+   position: relative is the anchor for the absolute menu panel.
+──────────────────────────────────────────────────────────────── */
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* ── Trigger button ──────────────────────────────────────────────
+   Looks like a styled text input; chevron sits flush right.
+──────────────────────────────────────────────────────────────── */
+.trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background-color: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: var(--font);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  min-height: 42px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  /* Prevent double-tap zoom on mobile */
+  touch-action: manipulation;
+}
+
+.trigger:hover:not(.disabled) {
+  border-color: var(--text-muted);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Open state — indigo ring, matches focus style of every other input */
+.triggerOpen {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15) !important;
+}
+
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Compact variant — used for the page-size selector */
+.compact {
+  padding: 6px 10px;
+  min-height: unset;
+  font-size: 13px;
+  width: auto;
+}
+
+/* ── Label text inside trigger ───────────────────────────────── */
+.selectedLabel {
+  flex: 1;
+  font-size: inherit;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.placeholder {
+  flex: 1;
+  font-size: inherit;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+/* ── Chevron icon ────────────────────────────────────────────── */
+.chevron {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: transform 0.2s ease, color 0.15s ease;
+}
+
+.triggerOpen .chevron,
+.chevronOpen {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+
+/* ── Dropdown menu panel ─────────────────────────────────────── */
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  min-width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 10px 24px -4px rgba(0, 0, 0, 0.12);
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 200;
+  /* Entrance animation */
+  animation: menuSlideIn 0.13s ease;
+}
+
+@keyframes menuSlideIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* Slim custom scrollbar */
+.menu::-webkit-scrollbar        { width: 5px; }
+.menu::-webkit-scrollbar-track  { background: transparent; }
+.menu::-webkit-scrollbar-thumb  { background: var(--border); border-radius: 4px; }
+.menu::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ── Option rows ─────────────────────────────────────────────── */
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.1s ease;
+  user-select: none;
+  min-height: 38px;
+}
+
+.optionLabel {
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* Keyboard / mouse hover */
+.optionFocused {
+  background: var(--primary-light);
+}
+
+/* Selected option */
+.optionSelected {
+  color: var(--primary);
+  font-weight: 600;
+  background: var(--primary-light);
+}
+
+.checkIcon {
+  flex-shrink: 0;
+  color: var(--primary);
+}

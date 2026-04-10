@@ -1,9 +1,11 @@
 import { Filter, X } from 'lucide-react'
+import CustomSelect from '../ui/CustomSelect'
 import styles from '../../styles/TodoList.module.css'
 
 /**
  * Filter bar — user dropdown, status dropdown, clear button.
  * Completely stateless; all values and handlers come from the parent page.
+ * onChange callbacks receive a plain value string (not a DOM Event).
  */
 export default function TodoFilters({
   users,
@@ -16,35 +18,42 @@ export default function TodoFilters({
 }) {
   const hasActiveFilters = userFilter || statusFilter
 
+  const userOptions = [
+    { value: '', label: 'All Users' },
+    ...users.map(u => ({ value: String(u.id), label: u.name })),
+  ]
+
+  const statusOptions = [
+    { value: '',          label: 'All Statuses' },
+    { value: 'completed', label: 'Completed' },
+    { value: 'pending',   label: 'Pending' },
+  ]
+
   return (
     <div className={styles.filters}>
-
-      <div className={styles.filterGroup}>
-        <label htmlFor="user-filter">User</label>
-        <select
-          id="user-filter"
-          value={userFilter}
-          onChange={onUserChange}
-          disabled={usersLoading}
-        >
-          <option value="">All Users</option>
-          {users.map(u => (
-            <option key={u.id} value={u.id}>{u.name}</option>
-          ))}
-        </select>
+      <div className={styles.filterIcon}>
+        <Filter size={16} />
       </div>
 
       <div className={styles.filterGroup}>
-        <label htmlFor="status-filter">Status</label>
-        <select
-          id="status-filter"
+        <label>User</label>
+        <CustomSelect
+          value={userFilter}
+          onChange={onUserChange}
+          options={userOptions}
+          placeholder="All Users"
+          disabled={usersLoading}
+        />
+      </div>
+
+      <div className={styles.filterGroup}>
+        <label>Status</label>
+        <CustomSelect
           value={statusFilter}
           onChange={onStatusChange}
-        >
-          <option value="">All Statuses</option>
-          <option value="completed">Completed</option>
-          <option value="pending">Pending</option>
-        </select>
+          options={statusOptions}
+          placeholder="All Statuses"
+        />
       </div>
 
       {hasActiveFilters && (

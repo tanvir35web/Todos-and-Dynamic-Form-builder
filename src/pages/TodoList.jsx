@@ -15,14 +15,17 @@ export default function TodoList() {
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
 
+  // ── Restore last filters from React Query cache when URL has no params ────
   useEffect(() => {
     if (searchParams.has('page')) return
     const cached = queryClient.getQueryData(todoKeys.lastFilters())
     if (cached) setSearchParams(buildParams(cached), { replace: true })
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ── Parse typed values from URL ───────────────────────────────────────────
   const { userFilter, statusFilter, page, limit } = parseParams(searchParams)
 
+  // ── Write every change back to the React Query cache (in-memory persistence)
   useEffect(() => {
     queryClient.setQueryData(todoKeys.lastFilters(), { userFilter, statusFilter, page, limit })
   }, [userFilter, statusFilter, page, limit, queryClient])
@@ -42,6 +45,7 @@ export default function TodoList() {
   const total      = data?.total ?? 0
   const totalPages = Math.max(1, Math.ceil(total / limit))
 
+  // ── URL update helper (replace: true keeps history clean) ────────────────
   const setParams = (updates) =>
     setSearchParams(buildParams({ userFilter, statusFilter, page, limit, ...updates }), { replace: true })
 
@@ -75,8 +79,8 @@ export default function TodoList() {
         usersLoading={usersLoading}
         userFilter={userFilter}
         statusFilter={statusFilter}
-        onUserChange={e => setParams({ userFilter: e.target.value, page: 1 })}
-        onStatusChange={e => setParams({ statusFilter: e.target.value, page: 1 })}
+        onUserChange={val => setParams({ userFilter: val, page: 1 })}
+        onStatusChange={val => setParams({ statusFilter: val, page: 1 })}
         onClear={() => setSearchParams(buildParams(DEFAULT_FILTERS), { replace: true })}
       />
 
@@ -105,7 +109,7 @@ export default function TodoList() {
           totalPages={totalPages}
           isFetching={isFetching}
           onPageChange={p => setParams({ page: p })}
-          onLimitChange={e => setParams({ limit: Number(e.target.value), page: 1 })}
+          onLimitChange={val => setParams({ limit: Number(val), page: 1 })}
         />
       )}
     </div>

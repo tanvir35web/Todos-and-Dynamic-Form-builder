@@ -1,5 +1,6 @@
 import { Trash2 } from 'lucide-react'
 import OptionsEditor from './OptionsEditor'
+import CustomSelect from '../ui/CustomSelect'
 import { INPUT_TYPES, OPTION_TYPES } from '../../constants'
 import styles from '../../styles/FormBuilder.module.css'
 
@@ -46,14 +47,11 @@ export default function FieldCard({
 
         <div className={styles.formGroup}>
           <label>Input Type</label>
-          <select
+          <CustomSelect
             value={field.type}
-            onChange={e => onUpdate(field.id, { type: e.target.value, options: [] })}
-          >
-            {INPUT_TYPES.map(t => (
-              <option key={t.value} value={t.value}>{t.label}</option>
-            ))}
-          </select>
+            onChange={val => onUpdate(field.id, { type: val, options: [] })}
+            options={INPUT_TYPES}
+          />
         </div>
 
         {!OPTION_TYPES.includes(field.type) && (

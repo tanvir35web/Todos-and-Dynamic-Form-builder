@@ -6,6 +6,7 @@ import {
   ChevronsRight,
 } from 'lucide-react'
 import { PAGE_SIZE_OPTIONS } from '../../constants'
+import CustomSelect from '../ui/CustomSelect'
 import styles from '../../styles/TodoList.module.css'
 
 /**
@@ -33,6 +34,11 @@ export default function TodoPagination({
   const from = (page - 1) * limit + 1
   const to   = Math.min(page * limit, total)
 
+  const pageSizeOptions = PAGE_SIZE_OPTIONS.map(s => ({
+    value: String(s),
+    label: `${s} / page`,
+  }))
+
   return (
     <div className={styles.pagination}>
       {/* Info + page-size selector */}
@@ -42,16 +48,13 @@ export default function TodoPagination({
         {' '}of{' '}
         <strong>{total.toLocaleString()}</strong>
         {' '}·{' '}
-        <select
-          className={styles.pageSizeSelect}
-          value={limit}
-          onChange={onLimitChange}
+        <CustomSelect
+          compact
+          value={String(limit)}
+          onChange={val => onLimitChange(Number(val))}
+          options={pageSizeOptions}
           aria-label="Items per page"
-        >
-          {PAGE_SIZE_OPTIONS.map(s => (
-            <option key={s} value={s}>{s} / page</option>
-          ))}
-        </select>
+        />
       </div>
 
       {/* Page number controls */}

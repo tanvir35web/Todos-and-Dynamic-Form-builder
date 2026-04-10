@@ -58,27 +58,10 @@
 }
 
 .filterGroup select {
-  padding: 10px 36px 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--bg);
+  /* size/colour overrides only — chevron + states handled globally */
   font-size: 14px;
-  color: var(--text-primary);
-  cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  width: 100%;
-  /* Custom chevron — removes native arrow, pins SVG to right-center */
-  -webkit-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-}
-
-.filterGroup select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  background-color: var(--bg);
+  min-height: 42px;
 }
 
 .filterGroup select:disabled {
@@ -99,7 +82,7 @@
   align-self: flex-end;
   /* Touch-friendly height */
   min-height: 42px;
-  display: flex;
+   display: flex;
   align-items: center;
   gap: 6px;
 }
@@ -433,19 +416,13 @@
 }
 
 .pageSizeSelect {
+  /* compact variant — override global padding for small size */
   padding: 5px 28px 5px 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  background: var(--surface);
-  color: var(--text-primary);
-  cursor: pointer;
-  /* Custom chevron */
-  -webkit-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
   background-position: right 8px center;
+  font-size: 13px;
+  background-color: var(--surface);
+  width: auto;
+  min-height: unset;
 }
 
 /* ── Responsive ─────────────────────────────────────────────── */

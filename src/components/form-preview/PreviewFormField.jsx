@@ -1,9 +1,10 @@
 import { AlertCircle } from 'lucide-react'
+import CustomSelect from '../ui/CustomSelect'
 import styles from '../../styles/FormPreview.module.css'
 
 const ERROR_STYLE = {
-  border: '1px solid var(--danger)',
-  boxShadow: '0 0 0 3px rgba(239,68,68,0.1)',
+  border: '1.5px solid var(--danger)',
+  boxShadow: '0 0 0 3px rgba(239,68,68,0.12)',
 }
 
 /**
@@ -26,20 +27,22 @@ export default function PreviewFormField({ field, value, error, onChange, onChec
           />
         )
 
-      case 'select':
+      case 'select': {
+        const selectOptions = [
+          { value: '', label: '— Select an option —' },
+          ...field.options.filter(Boolean).map(opt => ({ value: opt, label: opt })),
+        ]
         return (
-          <select
-            className={styles.formSelect}
-            style={inputStyle}
-            value={value}
-            onChange={e => onChange(field.id, e.target.value)}
-          >
-            <option value="">— Select an option —</option>
-            {field.options.filter(Boolean).map((opt, i) => (
-              <option key={i} value={opt}>{opt}</option>
-            ))}
-          </select>
+          <div style={error ? { borderRadius: 'var(--radius-sm)', ...inputStyle, padding: 0, overflow: 'hidden' } : {}}>
+            <CustomSelect
+              value={value}
+              onChange={val => onChange(field.id, val)}
+              options={selectOptions}
+              placeholder="— Select an option —"
+            />
+          </div>
         )
+      }
 
       case 'checkbox':
         return (
